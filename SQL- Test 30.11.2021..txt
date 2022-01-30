@@ -1,0 +1,70 @@
+1.) Ispisati naslove svih filmova koji su objavljeni izmedju 2005 i 2010 godine (u bazi su svi filmovi 2006 ali kveri mora  da radi i kada bi bilo filmova iz jos dosta razlicitih godina)
+
+
+SELECT title FROM film WHERE release_year BETWEEN 2005 AND 2010;
+
+
+
+2.) Ispisati koliko ima customer-a ciji email pocinje sa su. 
+
+
+SELECT COUNT(customer_id) FROM customer WHERE email LIKE 'su%';
+
+
+
+3.) Ispisati na kojoj adresi zivi customer Mary Smith 
+
+
+SELECT a.address
+FROM customer c, address a
+WHERE c.address_id = a.address_id
+AND c.first_name = 'Mary' AND c.last_name = 'Smith';
+
+
+4.) Ispisati minimalnu sumu novca koju je customer Debra Nelson platila da bi iznajmila film
+
+
+SELECT MIN(p.amount)
+FROM customer c, payment p
+WHERE c.customer_id = p.customer_id
+AND c.first_name = 'Debra' AND c.last_name = 'Nelson';
+
+
+5.) Ispisati ime i prezime customer-a koji su iznajmili vise od 10 filmova.
+
+
+SELECT c.first_name, c.last_name, COUNT(r.inventory_id) 
+FROM customer c, rental r
+WHERE c.customer_id = r.customer_id
+GROUP BY (c.first_name, c.last_name)
+HAVING COUNT(r.inventory_id) > 10;
+
+
+
+6.) Ispisati u koliko akcionih filmova je glumio glumac Ed Chase
+
+
+SELECT COUNT(*)
+FROM actor a, film_actor fa, film f, film_category fc, category c
+WHERE a.actor_id = fa.actor_id
+AND fa.film_id = f.film_id
+AND f.film_id = fc.film_id
+AND fc.category_id = c.category_id
+AND c.name = 'Action'
+AND a.first_name = 'Ed' AND a.last_name = 'Chase';
+
+
+
+
+7.) Ispisati koliko je prosecno novca potroseno na placanja u svakoj radnji, tu kolonu imenovati "Potroseno novca"
+
+
+SELECT s.store_id, AVG(p.amount) AS "Potroseno novca"
+FROM payment p, staff s, store st
+WHERE p.staff_id = s.staff_id
+AND s.store_id = st.store_id
+GROUP BY (s.store_id);
+
+
+Ispis da izgleda 
+store_id | Potroseno novca
